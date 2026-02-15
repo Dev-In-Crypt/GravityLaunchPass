@@ -1,0 +1,216 @@
+[
+  {
+    "type": "event",
+    "name": "JobCreated",
+    "inputs": [
+      { "name": "jobId", "type": "bytes32", "indexed": false },
+      { "name": "client", "type": "address", "indexed": false },
+      { "name": "preferredReviewer", "type": "address", "indexed": false },
+      { "name": "amount", "type": "uint256", "indexed": false },
+      { "name": "feeBps", "type": "uint16", "indexed": false },
+      { "name": "acceptDeadline", "type": "uint64", "indexed": false },
+      { "name": "submitDeadline", "type": "uint64", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "JobAccepted",
+    "inputs": [
+      { "name": "jobId", "type": "bytes32", "indexed": false },
+      { "name": "reviewer", "type": "address", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "JobCancelled",
+    "inputs": [
+      { "name": "jobId", "type": "bytes32", "indexed": false },
+      { "name": "client", "type": "address", "indexed": false },
+      { "name": "amount", "type": "uint256", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "ReportSubmitted",
+    "inputs": [
+      { "name": "jobId", "type": "bytes32", "indexed": false },
+      { "name": "reviewer", "type": "address", "indexed": false },
+      { "name": "reportHash", "type": "bytes32", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "JobReleased",
+    "inputs": [
+      { "name": "jobId", "type": "bytes32", "indexed": false },
+      { "name": "client", "type": "address", "indexed": false },
+      { "name": "reviewer", "type": "address", "indexed": false },
+      { "name": "amount", "type": "uint256", "indexed": false },
+      { "name": "fee", "type": "uint256", "indexed": false },
+      { "name": "reportHash", "type": "bytes32", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "JobReclaimed",
+    "inputs": [
+      { "name": "jobId", "type": "bytes32", "indexed": false },
+      { "name": "client", "type": "address", "indexed": false },
+      { "name": "amount", "type": "uint256", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "Withdrawal",
+    "inputs": [
+      { "name": "account", "type": "address", "indexed": false },
+      { "name": "amount", "type": "uint256", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "ReviewerAllowlistUpdated",
+    "inputs": [
+      { "name": "reviewer", "type": "address", "indexed": false },
+      { "name": "allowed", "type": "bool", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "ConfigUpdated",
+    "inputs": [
+      { "name": "defaultFeeBps", "type": "uint16", "indexed": false },
+      { "name": "defaultAcceptWindowSeconds", "type": "uint64", "indexed": false },
+      { "name": "defaultSubmitWindowSeconds", "type": "uint64", "indexed": false }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "createJob",
+    "stateMutability": "payable",
+    "inputs": [
+      { "name": "preferredReviewer", "type": "address" },
+      { "name": "feeBpsOverride", "type": "uint16" },
+      { "name": "acceptWindowOverride", "type": "uint64" },
+      { "name": "submitWindowOverride", "type": "uint64" }
+    ],
+    "outputs": [
+      { "name": "jobId", "type": "bytes32" }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "acceptJob",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      { "name": "jobId", "type": "bytes32" }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "cancelJob",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      { "name": "jobId", "type": "bytes32" }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "submitReportHash",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      { "name": "jobId", "type": "bytes32" },
+      { "name": "reportHash", "type": "bytes32" }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "acceptAndRelease",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      { "name": "jobId", "type": "bytes32" }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "autoRelease",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      { "name": "jobId", "type": "bytes32" }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "reclaimAfterNoSubmit",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      { "name": "jobId", "type": "bytes32" }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "withdraw",
+    "stateMutability": "nonpayable",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "pendingWithdrawals",
+    "stateMutability": "view",
+    "inputs": [
+      { "name": "account", "type": "address" }
+    ],
+    "outputs": [
+      { "name": "", "type": "uint256" }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "clientJobCount",
+    "stateMutability": "view",
+    "inputs": [
+      { "name": "client", "type": "address" }
+    ],
+    "outputs": [
+      { "name": "", "type": "uint256" }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "isReviewer",
+    "stateMutability": "view",
+    "inputs": [
+      { "name": "reviewer", "type": "address" }
+    ],
+    "outputs": [
+      { "name": "", "type": "bool" }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "jobs",
+    "stateMutability": "view",
+    "inputs": [
+      { "name": "jobId", "type": "bytes32" }
+    ],
+    "outputs": [
+      { "name": "client", "type": "address" },
+      { "name": "reviewer", "type": "address" },
+      { "name": "amount", "type": "uint256" },
+      { "name": "feeBps", "type": "uint16" },
+      { "name": "createdAt", "type": "uint64" },
+      { "name": "acceptWindowSeconds", "type": "uint64" },
+      { "name": "acceptDeadline", "type": "uint64" },
+      { "name": "submitDeadline", "type": "uint64" },
+      { "name": "reportHash", "type": "bytes32" },
+      { "name": "status", "type": "uint8" }
+    ]
+  }
+]

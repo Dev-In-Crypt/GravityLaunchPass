@@ -1,0 +1,27 @@
+.env
+.env.*
+apps/web/.env.local
+apps/web/.env
+
+# Node / Next.js
+node_modules/
+apps/web/node_modules/
+.next/
+apps/web/.next/
+dist/
+build/
+.turbo/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Foundry artifacts
+out/
+cache/
+broadcast/
