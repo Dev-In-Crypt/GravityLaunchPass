@@ -1,4 +1,4 @@
-# Gravity LaunchPass Escrow (Stage 1)
+# Gravity LaunchPass Escrow
 
 ## Stage 1 State Machine
 Statuses:
