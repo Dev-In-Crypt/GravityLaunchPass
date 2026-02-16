@@ -19,6 +19,9 @@ const STATUS_LABELS = {
   Released: "Released",
   Cancelled: "Cancelled",
   Reclaimed: "Reclaimed",
+  Disputed: "Disputed",
+  ResolvedRefunded: "Resolved (Refunded)",
+  ResolvedSplit: "Resolved (Split)",
 } as const;
 
 type JobSnapshot = {
@@ -79,6 +82,22 @@ export default function JobsPage() {
       }
       if (entry.eventName === "JobReclaimed") {
         existing.status = "Reclaimed";
+      }
+      if (entry.eventName === "DisputeOpened") {
+        existing.status = "Disputed";
+      }
+      if (entry.eventName === "DisputeResolved") {
+        const outcome = entry.args.outcome as number | undefined;
+        if (outcome === 0) {
+          existing.status = "Released";
+        } else if (outcome === 1) {
+          existing.status = "ResolvedRefunded";
+        } else if (outcome === 2) {
+          existing.status = "ResolvedSplit";
+        }
+      }
+      if (entry.eventName === "DisputeTimeoutResolved") {
+        existing.status = "ResolvedRefunded";
       }
       map.set(jobId, existing);
     }

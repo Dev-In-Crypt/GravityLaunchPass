@@ -85,6 +85,68 @@
     ]
   },
   {
+    "type": "event",
+    "name": "DisputeOpened",
+    "inputs": [
+      { "name": "jobId", "type": "bytes32", "indexed": false },
+      { "name": "client", "type": "address", "indexed": false },
+      { "name": "reviewer", "type": "address", "indexed": false },
+      { "name": "arbitrators", "type": "address[3]", "indexed": false },
+      { "name": "voteDeadline", "type": "uint64", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "DisputeDepositPosted",
+    "inputs": [
+      { "name": "jobId", "type": "bytes32", "indexed": false },
+      { "name": "party", "type": "address", "indexed": false },
+      { "name": "amount", "type": "uint256", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "DisputeVoteCast",
+    "inputs": [
+      { "name": "jobId", "type": "bytes32", "indexed": false },
+      { "name": "arbitrator", "type": "address", "indexed": false },
+      { "name": "outcome", "type": "uint8", "indexed": false },
+      { "name": "reviewerBps", "type": "uint16", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "DisputeResolved",
+    "inputs": [
+      { "name": "jobId", "type": "bytes32", "indexed": false },
+      { "name": "outcome", "type": "uint8", "indexed": false },
+      { "name": "reviewerBps", "type": "uint16", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "DisputeTimeoutResolved",
+    "inputs": [
+      { "name": "jobId", "type": "bytes32", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "ArbitratorAllowlistUpdated",
+    "inputs": [
+      { "name": "arbitrator", "type": "address", "indexed": false },
+      { "name": "allowed", "type": "bool", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "DisputeConfigUpdated",
+    "inputs": [
+      { "name": "disputeDepositAmount", "type": "uint256", "indexed": false },
+      { "name": "voteWindowSeconds", "type": "uint64", "indexed": false }
+    ]
+  },
+  {
     "type": "function",
     "name": "createJob",
     "stateMutability": "payable",
@@ -162,6 +224,82 @@
   },
   {
     "type": "function",
+    "name": "setDisputeDepositAmount",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      { "name": "newAmount", "type": "uint256" }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "setVoteWindowSeconds",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      { "name": "newSeconds", "type": "uint64" }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "setArbitrator",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      { "name": "arbitrator", "type": "address" },
+      { "name": "allowed", "type": "bool" }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "openDispute",
+    "stateMutability": "payable",
+    "inputs": [
+      { "name": "jobId", "type": "bytes32" },
+      { "name": "arbitrators", "type": "address[3]" }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "postDisputeDeposit",
+    "stateMutability": "payable",
+    "inputs": [
+      { "name": "jobId", "type": "bytes32" }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "voteDispute",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      { "name": "jobId", "type": "bytes32" },
+      { "name": "outcome", "type": "uint8" },
+      { "name": "reviewerBps", "type": "uint16" }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "resolveDispute",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      { "name": "jobId", "type": "bytes32" }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "resolveDisputeTimeout",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      { "name": "jobId", "type": "bytes32" }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
     "name": "pendingWithdrawals",
     "stateMutability": "view",
     "inputs": [
@@ -191,6 +329,92 @@
     ],
     "outputs": [
       { "name": "", "type": "bool" }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "isArbitrator",
+    "stateMutability": "view",
+    "inputs": [
+      { "name": "arbitrator", "type": "address" }
+    ],
+    "outputs": [
+      { "name": "", "type": "bool" }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "disputeDepositAmount",
+    "stateMutability": "view",
+    "inputs": [],
+    "outputs": [
+      { "name": "", "type": "uint256" }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "voteWindowSeconds",
+    "stateMutability": "view",
+    "inputs": [],
+    "outputs": [
+      { "name": "", "type": "uint64" }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "getArbitrators",
+    "stateMutability": "view",
+    "inputs": [],
+    "outputs": [
+      { "name": "", "type": "address[]" }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "getDispute",
+    "stateMutability": "view",
+    "inputs": [
+      { "name": "jobId", "type": "bytes32" }
+    ],
+    "outputs": [
+      { "name": "exists", "type": "bool" },
+      { "name": "openedAt", "type": "uint64" },
+      { "name": "voteDeadline", "type": "uint64" },
+      { "name": "arbitrators", "type": "address[3]" },
+      { "name": "clientDeposited", "type": "bool" },
+      { "name": "reviewerDeposited", "type": "bool" },
+      { "name": "clientDepositAmount", "type": "uint256" },
+      { "name": "reviewerDepositAmount", "type": "uint256" },
+      { "name": "depositAmount", "type": "uint256" },
+      { "name": "resolved", "type": "bool" },
+      { "name": "resolvedOutcome", "type": "uint8" },
+      { "name": "resolvedReviewerBps", "type": "uint16" }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "getDisputeVote",
+    "stateMutability": "view",
+    "inputs": [
+      { "name": "jobId", "type": "bytes32" },
+      { "name": "arbitrator", "type": "address" }
+    ],
+    "outputs": [
+      { "name": "exists", "type": "bool" },
+      { "name": "outcome", "type": "uint8" },
+      { "name": "reviewerBps", "type": "uint16" }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "getDisputeSplitCount",
+    "stateMutability": "view",
+    "inputs": [
+      { "name": "jobId", "type": "bytes32" },
+      { "name": "reviewerBps", "type": "uint16" }
+    ],
+    "outputs": [
+      { "name": "", "type": "uint8" }
     ]
   },
   {

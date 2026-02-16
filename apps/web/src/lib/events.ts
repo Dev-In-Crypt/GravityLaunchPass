@@ -23,7 +23,12 @@ type EventName =
   | "JobReleased"
   | "JobCancelled"
   | "JobReclaimed"
-  | "Withdrawal";
+  | "Withdrawal"
+  | "DisputeOpened"
+  | "DisputeDepositPosted"
+  | "DisputeVoteCast"
+  | "DisputeResolved"
+  | "DisputeTimeoutResolved";
 
 function getEvent(name: EventName) {
   const event = escrowAbi.find((item) => item.type === "event" && item.name === name) as
@@ -70,6 +75,11 @@ export async function fetchAllTimelineEvents(options?: { bypassCache?: boolean }
     "JobCancelled",
     "JobReclaimed",
     "Withdrawal",
+    "DisputeOpened",
+    "DisputeDepositPosted",
+    "DisputeVoteCast",
+    "DisputeResolved",
+    "DisputeTimeoutResolved",
   ] as const;
 
   const logs = await Promise.all(
@@ -112,6 +122,11 @@ export async function fetchJobTimelineEvents(jobId: Hex) {
     "JobReleased",
     "JobCancelled",
     "JobReclaimed",
+    "DisputeOpened",
+    "DisputeDepositPosted",
+    "DisputeVoteCast",
+    "DisputeResolved",
+    "DisputeTimeoutResolved",
   ] as const;
 
   const logs = await Promise.all(

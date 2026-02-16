@@ -61,3 +61,21 @@ The reviewer flow computes `reportHash = keccak256(raw file bytes)` before submi
 ### Timeline Note
 Withdrawal events are global and not tied to a specific jobId, so they are not shown in the job timeline.
 
+## Stage 3 Disputes v1
+Disputes add 3 allowlisted arbitrators, deposit-backed voting, and a timeout fallback.
+
+### Dispute Config (Owner)
+- `disputeDepositAmount` and `voteWindowSeconds` default to `0` and must be set by the owner.
+- Arbitrators must be allowlisted by the owner.
+
+### Manual Dispute Checklist
+1. Create job as client.
+2. Accept job as allowlisted reviewer.
+3. Submit report file and hash.
+4. Open dispute as client with 3 allowlisted arbitrators and pay deposit.
+5. Post deposit as reviewer.
+6. Vote as two arbitrators.
+7. Resolve dispute.
+8. Withdraw payouts as client, reviewer, and owner.
+9. Run timeout path by setting a short `voteWindowSeconds` on a local chain or wait on testnet.
+
