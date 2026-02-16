@@ -61,12 +61,3 @@ The reviewer flow computes `reportHash = keccak256(raw file bytes)` before submi
 ### Timeline Note
 Withdrawal events are global and not tied to a specific jobId, so they are not shown in the job timeline.
 
-### Manual Test Checklist
-1. Connect wallet and ensure Gravity testnet.
-2. Create job with amount.
-3. Accept job as allowlisted reviewer.
-4. Submit report file and reportHash.
-5. Accept and release as client.
-6. Withdraw as reviewer and owner.
-7. Create second job and test cancel.
-8. Create third job and test reclaim after no submit. Simulate on testnet by waiting past submitDeadline or using a short submit window override.
