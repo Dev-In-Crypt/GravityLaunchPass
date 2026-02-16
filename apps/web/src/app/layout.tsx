@@ -1,7 +1,7 @@
 import "./globals.css";
-import Link from "next/link";
 import { Providers } from "./providers";
 import type { ReactNode } from "react";
+import { NavBar } from "./NavBar";
 
 export const metadata = {
   title: "Gravity LaunchPass",
@@ -13,12 +13,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body>
         <Providers>
-          <nav>
-            <strong>Gravity LaunchPass</strong>
-            <Link href="/">Create Job</Link>
-            <Link href="/jobs">Jobs</Link>
-            <Link href="/withdraw">Withdraw</Link>
-          </nav>
+          <NavBar />
           <main>{children}</main>
         </Providers>
       </body>

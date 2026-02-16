@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAccount, useChainId, useConnect, useReadContract, useSwitchChain, useWriteContract } from "wagmi";
 import { NETWORK } from "@/config/networks";
 import { escrowAbi, escrowAddress } from "@/lib/contract";
@@ -49,6 +49,11 @@ export default function WithdrawPage() {
     if (!pending) return false;
     return BigInt(pending as bigint) > 0n;
   }, [pending]);
+
+  useEffect(() => {
+    setStatus(null);
+    setError(null);
+  }, [address, chainId]);
 
   return (
     <div>

@@ -9,7 +9,10 @@ const queryClient = new QueryClient();
 
 export function Providers({ children }: { children: ReactNode }) {
   return (
-    <WagmiProvider config={wagmiConfig}>
+    <WagmiProvider
+      config={wagmiConfig}
+      reconnectOnMount={process.env.NODE_ENV === "production"}
+    >
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </WagmiProvider>
   );

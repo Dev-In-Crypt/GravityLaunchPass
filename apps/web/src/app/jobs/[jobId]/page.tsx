@@ -17,6 +17,7 @@ import { clearEventsCache, fetchJobTimelineEvents, TimelineEntry } from "@/lib/e
 import { friendlyErrorMessage } from "@/lib/errors";
 import { formatEther, formatTimestamp, shortAddress } from "@/lib/format";
 import { publicClient } from "@/lib/clients";
+import { addressesEqual, normalizeAddress } from "@/lib/address";
 
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 
@@ -24,6 +25,7 @@ export default function JobDetailPage() {
   const params = useParams();
   const jobId = (params?.jobId as string | undefined) ?? "";
   const jobIdHex = jobId as Hex;
+  const [mounted, setMounted] = useState(false);
   const { address, isConnected } = useAccount();
   const chainId = useChainId();
   const { connect, connectors } = useConnect();
@@ -39,7 +41,7 @@ export default function JobDetailPage() {
     abi: escrowAbi,
     functionName: "jobs",
     args: [jobIdHex],
-    query: { enabled: Boolean(jobIdHex) },
+    query: { enabled: mounted && Boolean(jobIdHex) },
   });
 
   const { data: isAllowlisted } = useReadContract({
@@ -47,7 +49,7 @@ export default function JobDetailPage() {
     abi: escrowAbi,
     functionName: "isReviewer",
     args: address ? [address] : undefined,
-    query: { enabled: !!address },
+    query: { enabled: mounted && !!address },
   });
 
   const wrongNetwork = isConnected && chainId !== NETWORK.chainId;
@@ -61,6 +63,10 @@ export default function JobDetailPage() {
   };
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
     let mounted = true;
     refresh()
       .catch((err) => {
@@ -72,6 +78,12 @@ export default function JobDetailPage() {
       mounted = false;
     };
   }, [jobIdHex]);
+
+  useEffect(() => {
+    setError(null);
+    setStatus(null);
+    setReportHash(null);
+  }, [address, chainId]);
 
   const statusFromEvents = useMemo(() => {
     const last = timeline[timeline.length - 1];
@@ -119,14 +131,14 @@ export default function JobDetailPage() {
     !wrongNetwork &&
     isAllowlisted === true &&
     job &&
-    (job[1] === ZERO_ADDRESS || job[1].toLowerCase() === address?.toLowerCase());
+    (normalizeAddress(job[1]) === ZERO_ADDRESS || addressesEqual(job[1], address));
 
   const canSubmit =
     statusFromEvents === "Accepted" &&
     isConnected &&
     !wrongNetwork &&
     job &&
-    job[1].toLowerCase() === address?.toLowerCase() &&
+    addressesEqual(job[1], address) &&
     submitDeadline !== 0n &&
     nowSeconds <= submitDeadline;
 
@@ -135,7 +147,7 @@ export default function JobDetailPage() {
     isConnected &&
     !wrongNetwork &&
     job &&
-    job[0].toLowerCase() === address?.toLowerCase() &&
+    addressesEqual(job[0], address) &&
     acceptDeadline !== 0n &&
     nowSeconds <= acceptDeadline;
 
@@ -144,14 +156,14 @@ export default function JobDetailPage() {
     isConnected &&
     !wrongNetwork &&
     job &&
-    job[0].toLowerCase() === address?.toLowerCase();
+    addressesEqual(job[0], address);
 
   const canReclaim =
     statusFromEvents === "Accepted" &&
     isConnected &&
     !wrongNetwork &&
     job &&
-    job[0].toLowerCase() === address?.toLowerCase() &&
+    addressesEqual(job[0], address) &&
     submitDeadline !== 0n &&
     nowSeconds > submitDeadline;
 
@@ -187,6 +199,17 @@ export default function JobDetailPage() {
     const hash = keccak256(new Uint8Array(buffer));
     setReportHash(hash);
   };
+
+  if (!mounted) {
+    return (
+      <div>
+        <h1>Job Detail</h1>
+        <div className="card">
+          <p>Loading job...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>

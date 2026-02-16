@@ -65,6 +65,14 @@ export default function HomePage() {
     }
   }, [receipt, address, preCreateCount]);
 
+  useEffect(() => {
+    setStatus(null);
+    setError(null);
+    setTxHash(null);
+    setJobId(null);
+    setPreCreateCount(null);
+  }, [address, chainId]);
+
   const wrongNetwork = isConnected && chainId !== NETWORK.chainId;
 
   const handleCreate = async () => {

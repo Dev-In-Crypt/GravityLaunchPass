@@ -8,6 +8,7 @@ import { NETWORK } from "@/config/networks";
 import { clearEventsCache, fetchAllTimelineEvents } from "@/lib/events";
 import { friendlyErrorMessage } from "@/lib/errors";
 import { formatEther, shortAddress } from "@/lib/format";
+import { addressesEqual, normalizeAddress } from "@/lib/address";
 import { escrowAbi, escrowAddress } from "@/lib/contract";
 import { publicClient } from "@/lib/clients";
 
@@ -97,6 +98,10 @@ export default function JobsPage() {
     };
   }, []);
 
+  useEffect(() => {
+    setError(null);
+  }, [address, chainId]);
+
   const filteredJobs = useMemo(() => {
     if (filter === "All") return jobs;
     return jobs.filter((job) => job.status === filter);
@@ -158,8 +163,10 @@ export default function JobsPage() {
           isConnected &&
           !wrongNetwork &&
           isAllowlisted === true &&
-          (!job.preferredReviewer || job.preferredReviewer === "0x0000000000000000000000000000000000000000" ||
-            job.preferredReviewer.toLowerCase() === address?.toLowerCase());
+          (!job.preferredReviewer ||
+            normalizeAddress(job.preferredReviewer) ===
+              "0x0000000000000000000000000000000000000000" ||
+            addressesEqual(job.preferredReviewer, address));
         return (
           <div key={job.jobId} className="card">
             <div className="row">
